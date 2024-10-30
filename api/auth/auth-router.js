@@ -44,6 +44,12 @@ router.post('/register', async (req, res, next) => {
   } 
   
   try {
+    const sameUsername = await Users.findBy({ username }).first()
+    if (sameUsername) {
+      return res.status(400).json*({ message: 'Username Taken' })
+    }
+
+
     const hash = bcrypt.hashSync(password, 8); // Hash the password
     const newUser = await Users.add({ username, password: hash });
     res.status(201).json(newUser);
@@ -58,7 +64,12 @@ router.post('/register', async (req, res, next) => {
 
 
 router.post('/login', (req, res) => {
-  let { username, password } = req.body;
+  const { username, password } = req.body;
+
+if(!username || !password ) {
+  return res.status(400).json({ message: "username and password required" })
+}
+
 
   Users.findBy({ username })
     .first()

@@ -3,6 +3,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Users = require('../users/users-model');
+const restrict = require('../middleware/restricted');
 const router = express.Router();
 
 console.log('JWT Secret:', JWT_SECRET); // This should log the value, not undefined
@@ -40,19 +41,23 @@ router.post('/register', async (req, res, next) => {
   const { username, password } = req.body;  
 
   if (!username || !password) {
-    return res.status(400).json({ message: 'Username and password are required' })
+    return res.status(400).json({ message: 'username and password are required' })
   } 
   
   try {
     const sameUsername = await Users.findBy({ username }).first()
     if (sameUsername) {
-      return res.status(400).json*({ message: 'Username Taken' })
+      return res.status(400).json({ message: 'username Taken' })
     }
 
 
     const hash = bcrypt.hashSync(password, 8); // Hash the password
     const newUser = await Users.add({ username, password: hash });
-    res.status(201).json(newUser);
+    res.status(201).json({
+        id: newUserser.id,
+        username: newUser.username,
+        password: newUser.password
+    });
   } catch (err) {
     next(err);
   }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register'; 
 import JokesList from './components/JokesList';
@@ -22,9 +22,11 @@ function App() {
             <Link to="/jokes">Jokes</Link>
           </li>
         </ul>
-        <Route path="/login" render={(props) => <Login {...props} setToken={setToken} />} />
-        <Route path="/register" component={Register} />
-        <Route path="/jokes" render={(props) => <JokesList {...props} token={token} />} />
+        <Routes>
+          <Route path="/login" element={<Login setToken={setToken} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/jokes" element={<JokesList token={token} />} />
+        </Routes>
       </div>
     </Router>
   )

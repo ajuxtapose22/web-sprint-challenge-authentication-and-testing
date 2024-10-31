@@ -1,12 +1,11 @@
-const { JWT_SECRET } = require('../config/secrets'); // Store your JWT secret in a config file
+const { JWT_SECRET } = require('../config/secrets'); 
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Users = require('../users/users-model');
-// const restrict = require('../middleware/restricted');
 const router = express.Router();
 
-console.log('JWT Secret:', JWT_SECRET); // This should log the value, not undefined
+// console.log('JWT Secret:', JWT_SECRET);
 
 // POST Register Endpoint
 router.post('/register', async (req, res, next) => {
@@ -25,9 +24,7 @@ router.post('/register', async (req, res, next) => {
     const hash = bcrypt.hashSync(password, 8);
     const newUserArray = await Users.add({ username, password: hash });
     const newUser = newUserArray[0]
-  
-
-    console.log('New User Created:', newUser); // Log the returned newUser object
+    // console.log('New User Created:', newUser); 
 
     if (!newUser || !newUser.id) {
       return res.status(500).json({ message: 'Failed to create user' });
@@ -36,7 +33,7 @@ router.post('/register', async (req, res, next) => {
     res.status(201).json({
       id: newUser.id,
       username: newUser.username,
-      password: newUser.password, // Ideally, you should not return the password
+      password: newUser.password, 
     });
   } catch (err) {
     console.error('Registration error:', err);

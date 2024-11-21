@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const Users = require('../users/users-model');
 const router = express.Router();
 
-// console.log('JWT Secret:', JWT_SECRET);
 
 // POST Register Endpoint
 router.post('/register', async (req, res, next) => {
@@ -24,7 +23,7 @@ router.post('/register', async (req, res, next) => {
     const hash = bcrypt.hashSync(password, 8);
     const newUserArray = await Users.add({ username, password: hash });
     const newUser = newUserArray[0]
-    // console.log('New User Created:', newUser); 
+    
 
     if (!newUser || !newUser.id) {
       return res.status(500).json({ message: 'Failed to create user' });
@@ -42,18 +41,13 @@ router.post('/register', async (req, res, next) => {
 });
 
 
-
-
 // LOGIN ////////////////////////////////
-
-
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
 if(!username || !password ) {
   return res.status(400).json({ message: "username and password required" })
 }
-
 
   Users.findBy({ username })
     .first()
@@ -62,8 +56,7 @@ if(!username || !password ) {
         const token = generateToken(user); // new line
 
         // the server needs to return the token to the client
-        // this doesn't happen automatically like it happens with cookies
-        res.status(200).json({
+           res.status(200).json({
           message: `Welcome ${user.username}!, have a token...`,
           token, // attach the token as part of the response
         });
@@ -76,9 +69,7 @@ if(!username || !password ) {
     });
 });
 
-
-
-
+// Generate Token
 function generateToken(user) {
   const payload = {
     subject: user.id,
